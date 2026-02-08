@@ -25,6 +25,7 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+    command: sh -c "npx prisma db push --skip-generate && node dist/index.js"
 
   post-service:
     build: ./services/post-service
@@ -39,6 +40,7 @@ services:
         condition: service_healthy
       auth-service:
         condition: service_started
+    command: sh -c "npx prisma db push --skip-generate && node dist/index.js"
 
   comment-service:
     build: ./services/comment-service
@@ -53,6 +55,7 @@ services:
         condition: service_healthy
       auth-service:
         condition: service_started
+    command: sh -c "npx prisma db push --skip-generate && node dist/index.js"
 
   frontend:
     build: ./frontend
