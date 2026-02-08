@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  auth-service:
+    build: ./services/auth-service
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      DATABASE_URL: mysql://root:password@mysql:3306/auth_db
+      JWT_SECRET: dev-secret-key
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  post-service:
+    build: ./services/post-service
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+      DATABASE_URL: mysql://root:password@mysql:3306/posts_db
+      AUTH_SERVICE_URL: http://auth-service:3001
+    depends_on:
+      mysql:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+
+  comment-service:
+    build: ./services/comment-service
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+      DATABASE_URL: mysql://root:password@mysql:3306/comments_db
+      AUTH_SERVICE_URL: http://auth-service:3001
+    depends_on:
+      mysql:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - auth-service
+      - post-service
+      - comment-service
+
+volumes:
+  mysql_data:
