@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: post-service
-          image: <AWS_ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/blog-post-service:latest
+          image: 508262720940.dkr.ecr.us-west-2.amazonaws.com/blog-post-service:latest
+          command: ["sh", "-c", "npx prisma db push --skip-generate && node dist/index.js"]
           ports:
             - containerPort: 3002
           env:

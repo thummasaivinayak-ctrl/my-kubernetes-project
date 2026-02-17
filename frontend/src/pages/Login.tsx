@@ -22,36 +22,44 @@ function Login() {
   };
 
   return (
-    <div className="auth-page">
-      <h1>Login</h1>
-      {error && <div className="error-message">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+    <div className="auth-wrapper">
+      <div className="auth-page">
+        <div className="auth-brand">
+          <h1>BlogSpace</h1>
+          <p>Connect with writers and share your stories with the world.</p>
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        <div className="auth-card">
+          {error && <div className="error-message">{error}</div>}
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <input
+                id="email"
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <input
+                id="password"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button className="btn" type="submit">
+              Log In
+            </button>
+          </form>
+          <hr className="auth-divider" />
+          <div className="switch-link">
+            Don't have an account? <Link to="/register">Create new account</Link>
+          </div>
         </div>
-        <button className="btn" type="submit" style={{ width: '100%' }}>
-          Login
-        </button>
-      </form>
-      <div className="switch-link">
-        Don't have an account? <Link to="/register">Register</Link>
       </div>
     </div>
   );

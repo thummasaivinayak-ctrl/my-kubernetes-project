@@ -23,47 +23,55 @@ function Register() {
   };
 
   return (
-    <div className="auth-page">
-      <h1>Register</h1>
-      {error && <div className="error-message">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="name">Name</label>
-          <input
-            id="name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+    <div className="auth-wrapper">
+      <div className="auth-page">
+        <div className="auth-brand">
+          <h1>BlogSpace</h1>
+          <p>Join the community. It's quick and easy.</p>
         </div>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+        <div className="auth-card">
+          {error && <div className="error-message">{error}</div>}
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <input
+                id="name"
+                type="text"
+                placeholder="Full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <input
+                id="email"
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <input
+                id="password"
+                type="password"
+                placeholder="New password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+              />
+            </div>
+            <button className="btn" type="submit">
+              Sign Up
+            </button>
+          </form>
+          <hr className="auth-divider" />
+          <div className="switch-link">
+            Already have an account? <Link to="/login">Log In</Link>
+          </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6}
-          />
-        </div>
-        <button className="btn" type="submit" style={{ width: '100%' }}>
-          Register
-        </button>
-      </form>
-      <div className="switch-link">
-        Already have an account? <Link to="/login">Login</Link>
       </div>
     </div>
   );

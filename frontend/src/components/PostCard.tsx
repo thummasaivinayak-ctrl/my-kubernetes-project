@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { getAvatarColor, getInitial, timeAgo } from '../lib/utils';
 
 interface PostCardProps {
   id: string;
@@ -10,21 +11,32 @@ interface PostCardProps {
 
 function PostCard({ id, title, content, authorName, createdAt }: PostCardProps) {
   const excerpt = content.length > 200 ? content.substring(0, 200) + '...' : content;
-  const date = new Date(createdAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 
   return (
     <div className="post-card">
-      <h2>
-        <Link to={`/posts/${id}`}>{title}</Link>
-      </h2>
-      <div className="meta">
-        By {authorName} on {date}
+      <div className="post-card-header">
+        <span
+          className="avatar avatar-md"
+          style={{ background: getAvatarColor(authorName) }}
+        >
+          {getInitial(authorName)}
+        </span>
+        <div className="post-card-header-info">
+          <span className="author-name">{authorName}</span>
+          <span className="post-time">{timeAgo(createdAt)}</span>
+        </div>
       </div>
-      <div className="excerpt">{excerpt}</div>
+      <div className="post-card-body">
+        <h2>
+          <Link to={`/posts/${id}`}>{title}</Link>
+        </h2>
+        <div className="excerpt">{excerpt}</div>
+      </div>
+      <div className="post-card-footer">
+        <Link to={`/posts/${id}`} className="read-more">
+          Read more
+        </Link>
+      </div>
     </div>
   );
 }

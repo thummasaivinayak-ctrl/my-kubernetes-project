@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { postsApi } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import CommentList from '../components/CommentList';
+import { getAvatarColor, getInitial, timeAgo } from '../lib/utils';
 
 interface Post {
   id: string;
@@ -70,53 +71,64 @@ function PostDetail() {
   };
 
   if (loading) {
-    return <div className="page">Loading...</div>;
+    return (
+      <div className="page">
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+        </div>
+      </div>
+    );
   }
 
   if (!post) {
-    return <div className="page">{error || 'Post not found'}</div>;
+    return (
+      <div className="page">
+        <div className="empty-state">
+          <div className="empty-icon">&#128533;</div>
+          <h3>{error || 'Post not found'}</h3>
+        </div>
+      </div>
+    );
   }
-
-  const date = new Date(post.createdAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 
   const isAuthor = user && user.id === post.authorId;
 
   if (editing) {
     return (
       <div className="page">
-        <h1>Edit Post</h1>
-        {error && <div className="error-message">{error}</div>}
-        <form onSubmit={handleUpdate}>
-          <div className="form-group">
-            <label htmlFor="title">Title</label>
-            <input
-              id="title"
-              type="text"
-              value={editTitle}
-              onChange={(e) => setEditTitle(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="content">Content</label>
-            <textarea
-              id="content"
-              value={editContent}
-              onChange={(e) => setEditContent(e.target.value)}
-              required
-            />
-          </div>
-          <button className="btn" type="submit">
-            Save Changes
-          </button>{' '}
-          <button className="btn btn-secondary" type="button" onClick={() => setEditing(false)}>
-            Cancel
-          </button>
-        </form>
+        <div className="form-card">
+          <h1 style={{ fontSize: '1.3rem', marginBottom: '20px' }}>Edit Post</h1>
+          {error && <div className="error-message">{error}</div>}
+          <form onSubmit={handleUpdate}>
+            <div className="form-group">
+              <label htmlFor="title">Title</label>
+              <input
+                id="title"
+                type="text"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="content">Content</label>
+              <textarea
+                id="content"
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                required
+              />
+            </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button className="btn" type="submit">
+                Save Changes
+              </button>
+              <button className="btn btn-secondary" type="button" onClick={() => setEditing(false)}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     );
   }
@@ -124,17 +136,28 @@ function PostDetail() {
   return (
     <div className="page">
       <div className="post-detail">
-        <h1>{post.title}</h1>
-        <div className="meta">
-          By {post.authorName} on {date}
+        <div className="post-detail-header">
+          <span
+            className="avatar avatar-lg"
+            style={{ background: getAvatarColor(post.authorName) }}
+          >
+            {getInitial(post.authorName)}
+          </span>
+          <div className="post-detail-header-info">
+            <span className="author-name">{post.authorName}</span>
+            <span className="post-time">{timeAgo(post.createdAt)}</span>
+          </div>
         </div>
-        <div className="content">{post.content}</div>
+        <div className="post-detail-body">
+          <h1>{post.title}</h1>
+          <div className="content">{post.content}</div>
+        </div>
         {isAuthor && (
-          <div className="actions">
-            <button className="btn" onClick={() => setEditing(true)}>
+          <div className="post-detail-actions">
+            <button className="btn btn-sm btn-secondary" onClick={() => setEditing(true)}>
               Edit
             </button>
-            <button className="btn btn-danger" onClick={handleDelete}>
+            <button className="btn btn-sm btn-danger" onClick={handleDelete}>
               Delete
             </button>
           </div>

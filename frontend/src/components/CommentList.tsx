@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { commentsApi } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
+import { getAvatarColor, getInitial, timeAgo } from '../lib/utils';
 
 interface Comment {
   id: string;
@@ -59,43 +60,62 @@ function CommentList({ postId }: CommentListProps) {
 
   return (
     <div className="comments-section">
-      <h2>Comments ({comments.length})</h2>
+      <div className="comments-section-header">
+        Comments ({comments.length})
+      </div>
 
       {isAuthenticated && (
         <form className="comment-form" onSubmit={handleSubmit}>
-          {error && <div className="error-message">{error}</div>}
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Write a comment..."
-          />
-          <button className="btn" type="submit">
-            Add Comment
-          </button>
-        </form>
-      )}
-
-      {comments.map((comment) => {
-        const date = new Date(comment.createdAt).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        });
-
-        return (
-          <div key={comment.id} className="comment">
-            <div className="meta">
-              {comment.authorName} on {date}
-            </div>
-            <div className="content">{comment.content}</div>
-            {user && user.id === comment.authorId && (
-              <button className="delete-btn" onClick={() => handleDelete(comment.id)}>
-                Delete
+          <span
+            className="avatar avatar-sm"
+            style={{ background: getAvatarColor(user?.name || '') }}
+          >
+            {getInitial(user?.name || '')}
+          </span>
+          <div className="comment-input-wrapper">
+            {error && <div className="error-message">{error}</div>}
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Write a comment..."
+            />
+            {newComment.trim() && (
+              <button className="btn" type="submit">
+                Post
               </button>
             )}
           </div>
-        );
-      })}
+        </form>
+      )}
+
+      {comments.length === 0 && (
+        <div className="no-comments">No comments yet. Be the first to comment!</div>
+      )}
+
+      {comments.map((comment) => (
+        <div key={comment.id} className="comment">
+          <span
+            className="avatar avatar-sm"
+            style={{ background: getAvatarColor(comment.authorName) }}
+          >
+            {getInitial(comment.authorName)}
+          </span>
+          <div className="comment-bubble">
+            <div className="comment-bubble-inner">
+              <div className="author-name">{comment.authorName}</div>
+              <div className="content">{comment.content}</div>
+            </div>
+            <div className="comment-meta">
+              <span>{timeAgo(comment.createdAt)}</span>
+              {user && user.id === comment.authorId && (
+                <button className="delete-btn" onClick={() => handleDelete(comment.id)}>
+                  Delete
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
