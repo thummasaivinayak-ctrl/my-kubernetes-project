@@ -1,17 +1,17 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || '';
+const API_URL = import.meta.env.VITE_API_URL ?? '';
 
 const authApi = axios.create({
-  baseURL: import.meta.env.VITE_AUTH_API_URL || API_URL || 'http://localhost:3001',
+  baseURL: import.meta.env.VITE_AUTH_API_URL ?? API_URL,
 });
 
 const postsApi = axios.create({
-  baseURL: import.meta.env.VITE_POSTS_API_URL || API_URL || 'http://localhost:3002',
+  baseURL: import.meta.env.VITE_POSTS_API_URL ?? API_URL,
 });
 
 const commentsApi = axios.create({
-  baseURL: import.meta.env.VITE_COMMENTS_API_URL || API_URL || 'http://localhost:3003',
+  baseURL: import.meta.env.VITE_COMMENTS_API_URL ?? API_URL,
 });
 
 function addAuthInterceptor(instance: ReturnType<typeof axios.create>) {

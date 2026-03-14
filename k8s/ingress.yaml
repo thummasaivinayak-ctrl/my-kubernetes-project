@@ -3,16 +3,10 @@ kind: Ingress
 metadata:
   name: blog-ingress
   namespace: blog
-  annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
-    alb.ingress.kubernetes.io/healthcheck-path: /
 spec:
-  ingressClassName: alb
+  ingressClassName: nginx
   rules:
-    - host: amazontechspace.com
-      http:
+    - http:
         paths:
           - path: /api/auth
             pathType: Prefix
