@@ -3,10 +3,17 @@ kind: Ingress
 metadata:
   name: blog-ingress
   namespace: blog
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+    - blog.saicloudlabs.store
+    secretName: blog-tls-secret
   rules:
-    - http:
+    - host: blog.saicloudlabs.store
+      http:
         paths:
           - path: /api/auth
             pathType: Prefix

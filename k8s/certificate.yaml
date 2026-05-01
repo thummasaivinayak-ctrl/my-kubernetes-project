@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: blog-tls
+  namespace: blog
+spec:
+  secretName: blog-tls-secret
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - blog.saicloudlabs.store
+  # Optional: add www subdomain
+  # - www.blog.saicloudlabs.store

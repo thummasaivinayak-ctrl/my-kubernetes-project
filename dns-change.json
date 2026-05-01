@@ -1,0 +1,1 @@
+{"Changes":[{"Action":"UPSERT","ResourceRecordSet":{"Name":"blog.saicloudlabs.store","Type":"CNAME","TTL":300,"ResourceRecords":[{"Value":"ad14e3f1aa37b48768184bdfc00f299b-a452f3571ba6d00e.elb.us-west-2.amazonaws.com"}]}}]}
