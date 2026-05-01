@@ -1,11 +1,15 @@
 name: Build and Deploy
 
 on:
-  push:
-    branches: [main]
+  # To enable automatic deployment on push, uncomment the lines below:
+  # push:
+  #   branches: [main]
+
+  # Manual trigger enabled to prevent automatic builds while cluster is down
+  workflow_dispatch: 
 
 env:
-  AWS_REGION: ap-south-1
+  AWS_REGION: us-west-2
   EKS_CLUSTER: blog-cluster
 
 jobs:
